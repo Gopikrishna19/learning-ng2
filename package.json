@@ -1,0 +1,9 @@
+{
+  "name": "learning-ng2",
+  "version": "0.0.0",
+  "description": "Learning Angular 2",
+  "main": "index.js",
+  "repository": "Gopikrishna19/learning-ng2",
+  "author": "Gopikrishna Sathyamurthy",
+  "license": "MIT"
+}
