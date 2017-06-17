@@ -4,6 +4,7 @@ const Webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
 
+const commonChunks = new Webpack.optimize.CommonsChunkPlugin({name: ['app', 'vendor', 'polyfills']});
 const staticFilesPattern = /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/;
 const staticLoader = {
   file: {
@@ -50,7 +51,6 @@ const config = env => ({
     chunkFilename: '[id].[hash].chunk.js'
   },
   plugins: [
-    new Webpack.optimize.CommonsChunkPlugin({name: ['app', 'vendor', 'polyfills']}),
     new ExtractTextPlugin('[name].[hash].css'),
     new HtmlWebpackPlugin({template: './src/index.html'}),
     new Webpack.ContextReplacementPlugin(
@@ -72,6 +72,7 @@ module.exports = (env = {}) => {
       return merge(config(env), {
         module: {loaders: [staticLoader.file]},
         plugins: [
+          commonChunks,
           new Webpack.NoErrorsPlugin(),
           new Webpack.optimize.DedupePlugin(),
           new Webpack.optimize.UglifyJsPlugin({mangle: {keep_fnames: true}})
@@ -96,7 +97,10 @@ module.exports = (env = {}) => {
         },
         entry: {hot: 'webpack-dev-server/client?http://localhost:8080/'},
         module: {loaders: [staticLoader.file]},
-        plugins: [new Webpack.HotModuleReplacementPlugin()]
+        plugins: [
+          commonChunks,
+          new Webpack.HotModuleReplacementPlugin()
+        ]
       });
 
   }
