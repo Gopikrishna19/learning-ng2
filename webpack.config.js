@@ -15,7 +15,7 @@ const staticLoader = {
     loader: 'null-loader'
   }
 };
-const config = {
+const config = env => ({
   entry: {
     'index': './src/index.ts',
     'vendor': './src/vendor.ts',
@@ -52,32 +52,35 @@ const config = {
     new Webpack.ContextReplacementPlugin(
       /angular[\\\/]core[\\\/]@angular/,
       path.join(__dirname, 'src')
-    )
-  ]
-};
+    ),
+    new Webpack.DefinePlugin({env: JSON.stringify(env)})
+  ],
+  resolve: {
+    extensions: ['.js', '.ts']
+  }
+});
 
 module.exports = (env = {}) => {
 
   switch (env.mode) {
 
     case 'prod':
-      return merge(config, {
+      return merge(config(env), {
         module: {loaders: [staticLoader.file]},
         plugins: [
           new Webpack.NoErrorsPlugin(),
           new Webpack.optimize.DedupePlugin(),
-          new Webpack.optimize.UglifyJsPlugin({mangle: {keep_fnames: true}}),
-          new Webpack.DefinePlugin({env: JSON.stringify(env)})
+          new Webpack.optimize.UglifyJsPlugin({mangle: {keep_fnames: true}})
         ]
       });
 
     case 'test':
-      return merge(config, {
+      return merge(config(env), {
         module: {loaders: [staticLoader.test]}
       });
 
     default:
-      return merge(config, {
+      return merge(config(env), {
         devtool: 'source-map',
         devServer: {
           contentBase: './',
