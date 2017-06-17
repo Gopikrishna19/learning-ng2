@@ -15,12 +15,11 @@ const staticLoader = {
     loader: 'null-loader'
   }
 };
-
 const config = {
   entry: {
-    'polyfills': './src/polyfills.ts',
+    'index': './src/index.ts',
     'vendor': './src/vendor.ts',
-    'app': './src/main.ts'
+    'polyfills': './src/polyfills.ts'
   },
   module: {
     loaders: [
@@ -49,7 +48,11 @@ const config = {
   plugins: [
     new Webpack.optimize.CommonsChunkPlugin({name: ['app', 'vendor', 'polyfills']}),
     new ExtractTextPlugin('[name].[hash].css'),
-    new HtmlWebpackPlugin({template: './src/index.html'})
+    new HtmlWebpackPlugin({template: './src/index.html'}),
+    new Webpack.ContextReplacementPlugin(
+      /angular[\\\/]core[\\\/]@angular/,
+      path.join(__dirname, 'src')
+    )
   ]
 };
 
@@ -70,14 +73,19 @@ module.exports = (env = {}) => {
 
     case 'test':
       return merge(config, {
-        module: {loaders: [staticLoader.test]},
+        module: {loaders: [staticLoader.test]}
       });
 
     default:
       return merge(config, {
+        devtool: 'source-map',
         devServer: {
           contentBase: './',
-          hot: true
+          hot: true,
+          stats: {
+            children: false,
+            chunks: false
+          }
         },
         entry: {hot: 'webpack-dev-server/client?http://localhost:8080/'},
         module: {loaders: [staticLoader.file]},
