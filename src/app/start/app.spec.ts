@@ -3,13 +3,11 @@ import {AppComponent} from './app';
 
 describe('<main-app/>', () => {
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({declarations: [AppComponent]});
-  });
+  beforeEach(() => TestBed.configureTestingModule({declarations: [AppComponent]}));
 
-  it('should work', () => {
-    let fixture = TestBed.createComponent(AppComponent);
-    expect(fixture.componentInstance instanceof AppComponent).toBe(true, 'should create AppComponent');
+  it('should exist', () => {
+    const component = TestBed.createComponent(AppComponent);
+    expect(component.componentInstance instanceof AppComponent).toBe(true);
   });
 
 });
