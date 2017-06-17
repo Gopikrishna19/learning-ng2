@@ -32,11 +32,15 @@ const config = env => ({
         loader: 'html-loader'
       },
       {
-        test: /\.s?css$/,
+        test: /\.scss$/,
         loader: ExtractTextPlugin.extract([
           'css-loader',
           'sass-loader'
         ])
+      },
+      {
+        test: /\.css$/,
+        loader: 'raw-loader'
       }
     ]
   },
